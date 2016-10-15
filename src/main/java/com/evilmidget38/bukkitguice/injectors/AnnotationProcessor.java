@@ -32,7 +32,8 @@ public abstract class AnnotationProcessor<ANNOTATION extends Annotation> impleme
         }
     }
 
-    public Matcher<?> getMatcher() {
+    @Override
+    public Matcher<? super TypeLiteral<?>> getMatcher() {
         return Matchers.any();
     }
 

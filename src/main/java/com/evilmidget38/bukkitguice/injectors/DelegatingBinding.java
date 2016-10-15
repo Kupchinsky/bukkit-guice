@@ -6,10 +6,10 @@ import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
 
 public class DelegatingBinding implements TypeListenerBinding {
-    private final Matcher<?> matcher;
+    private final Matcher<? super TypeLiteral<?>> matcher;
     private final TypeListener listener;
 
-    public DelegatingBinding(Matcher<?> matcher, TypeListener listener) {
+    public DelegatingBinding(Matcher<? super TypeLiteral<?>> matcher, TypeListener listener) {
         this.matcher = matcher;
         this.listener = listener;
     }
@@ -19,11 +19,11 @@ public class DelegatingBinding implements TypeListenerBinding {
     }
 
     @Override
-    public Matcher<?> getMatcher() {
+    public Matcher<? super TypeLiteral<?>> getMatcher() {
         return matcher;
     }
 
-    public static TypeListenerBinding of(final Matcher<?> matcher, final TypeListener listener) {
+    public static TypeListenerBinding of(final Matcher<? super TypeLiteral<?>> matcher, final TypeListener listener) {
         return new DelegatingBinding(matcher, listener);
     }
 }
