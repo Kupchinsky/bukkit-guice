@@ -13,10 +13,6 @@
             <id>atisot_maven</id>
             <url>file://${project.basedir}/../Maven</url>
         </repository>
-        <repository>
-            <id>github-rjenkinsjr</id>
-            <url>https://raw.github.com/rjenkinsjr/maven2/repo</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -45,7 +41,7 @@
         <dependency>
             <groupId>info.ronjenkins</groupId>
             <artifactId>slf4bukkit</artifactId>
-            <version>0.1.4</version>
+            <version>0.1.5-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.j256.ormlite</groupId>
