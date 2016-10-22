@@ -41,7 +41,7 @@
         <dependency>
             <groupId>info.ronjenkins</groupId>
             <artifactId>slf4bukkit</artifactId>
-            <version>0.1.5-SNAPSHOT</version>
+            <version>0.1.6-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.j256.ormlite</groupId>
@@ -92,10 +92,11 @@
 					<executable>java</executable>
 					<arguments>
 						<argument>-jar</argument>
-						<argument>jarjar-1.0rc3.jar</argument>
-						<argument>--rules=rules.txt</argument>
+						<argument>jarjar-1.4.jar</argument>
+						<argument>process</argument>
+						<argument>rules.txt</argument>
 						<argument>target\bukkit-guice-${project.version}.jar</argument>
-						<argument>target\bukkit-guice-${project.version}-remapped.jar</argument>
+						<argument>target\bukkit-guice-${project.version}.jar</argument>
 					</arguments>
 				</configuration>
 			</plugin>
