@@ -31,15 +31,19 @@ import java.util.HashSet;
 
 public class InternalModule extends AbstractModule {
     private final JavaPlugin plugin;
+    private final BukkitGuice bukkitGuice;
 
-    public InternalModule(JavaPlugin plugin) {
+    public InternalModule(JavaPlugin plugin, BukkitGuice bukkitGuice) {
         this.plugin = plugin;
+        this.bukkitGuice = bukkitGuice;
     }
 
     @Override
     protected void configure() {
         bind(TypeLiterals.SET_CLASS).annotatedWith(Names.named("discovered")).toInstance(new HashSet<Class<?>>());
         bind(JavaPlugin.class).toInstance(plugin);
+        bind(BukkitGuice.class).toInstance(bukkitGuice);
+
         bind(ServiceManager.class).to(DefaultServiceManager.class);
         Multibinder<Module> modules = Multibinder.newSetBinder(binder(), Module.class);
         Multibinder<TypeListenerBinding> typeListeners = Multibinder.newSetBinder(binder(), TypeListenerBinding.class);
