@@ -12,12 +12,23 @@ import com.evilmidget38.bukkitguice.services.DefaultServiceManager;
 import com.evilmidget38.bukkitguice.services.PluginServiceHandler;
 import com.evilmidget38.bukkitguice.services.ServiceManager;
 import com.google.inject.AbstractModule;
+import com.google.inject.MembersInjector;
 import com.google.inject.Module;
+import com.google.inject.TypeLiteral;
+import com.google.inject.matcher.Matchers;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.HashSet;
+
+import com.google.inject.spi.TypeEncounter;
+import com.google.inject.spi.TypeListener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class InternalModule extends AbstractModule {
     private final JavaPlugin plugin;
@@ -42,5 +53,42 @@ public class InternalModule extends AbstractModule {
         Multibinder<ObjectInitializer> initializers = Multibinder.newSetBinder(binder(), ObjectInitializer.class);
         initializers.addBinding().to(CommandInitializer.class);
         initializers.addBinding().to(ListenerInitializer.class);
+
+        bindListener(Matchers.any(), new LoggerTypeListener());
+    }
+
+    public static class LoggerTypeListener implements TypeListener {
+        public <T> void hear(TypeLiteral<T> typeLiteral, TypeEncounter<T> typeEncounter) {
+            Class<?> clazz = typeLiteral.getRawType();
+            while (clazz != null) {
+                for (Field field : clazz.getDeclaredFields()) {
+                    if (field.getType() == Logger.class &&
+                            Modifier.isStatic(field.getModifiers()) &&
+                            Modifier.isPrivate(field.getModifiers())) {
+                        typeEncounter.register(new LoggerMembersInjector<>(field));
+                    }
+                }
+                clazz = clazz.getSuperclass();
+            }
+        }
+    }
+
+    public static class LoggerMembersInjector<T> implements MembersInjector<T> {
+        private final Field field;
+        private final Logger logger;
+
+        LoggerMembersInjector(Field field) {
+            this.field = field;
+            this.logger = LoggerFactory.getLogger(field.getDeclaringClass().getSimpleName());
+            field.setAccessible(true);
+        }
+
+        public void injectMembers(T t) {
+            try {
+                field.set(t, logger);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }
