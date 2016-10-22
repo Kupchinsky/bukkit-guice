@@ -18,17 +18,16 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.matcher.Matchers;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
+import com.google.inject.spi.InjectionListener;
+import com.google.inject.spi.TypeEncounter;
+import com.google.inject.spi.TypeListener;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashSet;
-
-import com.google.inject.spi.TypeEncounter;
-import com.google.inject.spi.TypeListener;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class InternalModule extends AbstractModule {
     private final JavaPlugin plugin;
@@ -55,6 +54,31 @@ public class InternalModule extends AbstractModule {
         initializers.addBinding().to(ListenerInitializer.class);
 
         bindListener(Matchers.any(), new LoggerTypeListener());
+        bindListener(Matchers.any(), new AfterContextInitializeTypeListener());
+    }
+
+    public static class AfterContextInitializeTypeListener implements TypeListener {
+        public <T> void hear(TypeLiteral<T> typeLiteral, TypeEncounter<T> typeEncounter) {
+            Class<?> clazz = typeLiteral.getRawType();
+
+            if (AfterContextInitialize.class.isAssignableFrom(clazz)) {
+                typeEncounter.register(new AfterContextInitializeInjectionListener<>());
+            }
+        }
+    }
+
+    public static class AfterContextInitializeInjectionListener<T> implements InjectionListener<T> {
+        private static Logger logger = LoggerFactory.getLogger(AfterContextInitializeInjectionListener.class);
+
+        @Override
+        public void afterInjection(T instance) {
+            try {
+                ((AfterContextInitialize) instance).contextInitialized();
+            } catch (Exception e) {
+                logger.error("Unable to initialize class {}", instance.getClass().getName(), e);
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     public static class LoggerTypeListener implements TypeListener {

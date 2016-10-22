@@ -6,6 +6,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Module;
+import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,12 +15,16 @@ import java.util.Set;
 
 public class BukkitGuice {
     private final JavaPlugin plugin;
-    private final List<Module> internalModules = Lists.newArrayList();
 
+    private final List<Module> internalModules = Lists.newArrayList();
 
     public BukkitGuice(JavaPlugin plugin) {
         this.plugin = plugin;
         this.internalModules.add(new InternalModule(plugin));
+    }
+
+    public List<Module> getInternalModules() {
+        return internalModules;
     }
 
     @SuppressWarnings("unchecked")
