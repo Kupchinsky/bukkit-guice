@@ -14,6 +14,7 @@ import com.evilmidget38.bukkitguice.services.ServiceManager;
 import com.google.inject.AbstractModule;
 import com.google.inject.MembersInjector;
 import com.google.inject.Module;
+import com.google.inject.Provider;
 import com.google.inject.TypeLiteral;
 import com.google.inject.matcher.Matchers;
 import com.google.inject.multibindings.Multibinder;
@@ -24,6 +25,7 @@ import com.google.inject.spi.TypeListener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rx.bukkit.scheduler.BukkitRxScheduler;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -59,6 +61,19 @@ public class InternalModule extends AbstractModule {
 
         bindListener(Matchers.any(), new LoggerTypeListener());
         bindListener(Matchers.any(), new AfterContextInitializeTypeListener());
+
+        bind(BukkitRxScheduler.class).annotatedWith(RxSchedulerAsync.class).toProvider(new Provider<BukkitRxScheduler>() {
+            @Override
+            public BukkitRxScheduler get() {
+                return BukkitRxScheduler.forPlugin(plugin, BukkitRxScheduler.ConcurrencyMode.ASYNCHRONOUS);
+            }
+        });
+        bind(BukkitRxScheduler.class).toProvider(new Provider<BukkitRxScheduler>() {
+            @Override
+            public BukkitRxScheduler get() {
+                return BukkitRxScheduler.forPlugin(plugin, BukkitRxScheduler.ConcurrencyMode.SYNCHRONOUS);
+            }
+        });
     }
 
     public static class AfterContextInitializeTypeListener implements TypeListener {

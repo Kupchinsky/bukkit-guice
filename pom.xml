@@ -6,7 +6,7 @@
 
     <groupId>com.evilmidget38</groupId>
     <artifactId>bukkit-guice</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 
     <repositories>
         <repository>
@@ -56,6 +56,12 @@
             <groupId>com.j256.ormlite</groupId>
             <artifactId>ormlite-jdbc</artifactId>
             <version>5.0</version>
+        </dependency>
+        <dependency>
+            <groupId>RxBukkit</groupId>
+            <artifactId>rxjava-bukkit</artifactId>
+            <version>1.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
     <build>
