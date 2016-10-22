@@ -60,7 +60,6 @@ public class InternalModule extends AbstractModule {
         initializers.addBinding().to(ListenerInitializer.class);
 
         bindListener(Matchers.any(), new LoggerTypeListener());
-        bindListener(Matchers.any(), new AfterContextInitializeTypeListener());
 
         bind(BukkitRxScheduler.class).annotatedWith(RxSchedulerAsync.class).toProvider(new Provider<BukkitRxScheduler>() {
             @Override
@@ -74,30 +73,6 @@ public class InternalModule extends AbstractModule {
                 return BukkitRxScheduler.forPlugin(plugin, BukkitRxScheduler.ConcurrencyMode.SYNCHRONOUS);
             }
         });
-    }
-
-    public static class AfterContextInitializeTypeListener implements TypeListener {
-        public <T> void hear(TypeLiteral<T> typeLiteral, TypeEncounter<T> typeEncounter) {
-            Class<?> clazz = typeLiteral.getRawType();
-
-            if (AfterContextInitialize.class.isAssignableFrom(clazz)) {
-                typeEncounter.register(new AfterContextInitializeInjectionListener<>());
-            }
-        }
-    }
-
-    public static class AfterContextInitializeInjectionListener<T> implements InjectionListener<T> {
-        private static Logger logger = LoggerFactory.getLogger(AfterContextInitializeInjectionListener.class);
-
-        @Override
-        public void afterInjection(T instance) {
-            try {
-                ((AfterContextInitialize) instance).contextInitialized();
-            } catch (Exception e) {
-                logger.error("Unable to initialize class {}", instance.getClass().getName(), e);
-                throw new RuntimeException(e);
-            }
-        }
     }
 
     public static class LoggerTypeListener implements TypeListener {

@@ -26,11 +26,15 @@ public class BukkitGuice {
     }
 
     public void injectMembers(Object instance) {
-        injectors.get(this).injectMembers(instance);
+        this.getInjector().injectMembers(instance);
     }
 
     public List<Module> getInternalModules() {
         return internalModules;
+    }
+
+    public Injector getInjector() {
+        return injectors.get(this);
     }
 
     @SuppressWarnings("unchecked")
