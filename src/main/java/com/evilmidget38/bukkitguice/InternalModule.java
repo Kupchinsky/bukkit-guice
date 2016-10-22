@@ -29,10 +29,9 @@ public class InternalModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(TypeLiterals.SET_CLASS).annotatedWith(Names.named("discovered")).toInstance(new HashSet<Class<?>>());
-        bind(Plugin.class).toInstance(plugin);
+        bind(JavaPlugin.class).toInstance(plugin);
         bind(ServiceManager.class).to(DefaultServiceManager.class);
         Multibinder<Module> modules = Multibinder.newSetBinder(binder(), Module.class);
-        modules.addBinding().to(PluginModule.class);
         Multibinder<TypeListenerBinding> typeListeners = Multibinder.newSetBinder(binder(), TypeListenerBinding.class);
         typeListeners.addBinding().to(ConfigProcessor.class);
         typeListeners.addBinding().to(PluginProcessor.class);

@@ -1,25 +1,16 @@
 package com.evilmidget38.bukkitguice;
 
-import com.evilmidget38.bukkitguice.command.CommandInitializer;
-import com.evilmidget38.bukkitguice.listener.ListenerInitializer;
-import com.evilmidget38.bukkitguice.minecraft.McVersion;
-import com.evilmidget38.bukkitguice.minecraft.McVersionConstraint;
-import com.evilmidget38.bukkitguice.plugin.PluginVersion;
-import com.evilmidget38.bukkitguice.plugin.PluginVersionConstraint;
-import com.evilmidget38.bukkitguice.services.Constraint;
-import com.evilmidget38.bukkitguice.services.DefaultServiceManager;
 import com.evilmidget38.bukkitguice.services.ServiceManager;
 import com.google.common.collect.Lists;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Module;
-import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
-import java.lang.annotation.Annotation;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import java.util.List;
 import java.util.Set;
-import org.bukkit.plugin.java.JavaPlugin;
 
 public class BukkitGuice {
     private final JavaPlugin plugin;
@@ -28,8 +19,8 @@ public class BukkitGuice {
 
     public BukkitGuice(JavaPlugin plugin) {
         this.plugin = plugin;
+        this.internalModules.add(new InternalModule(plugin));
     }
-
 
     @SuppressWarnings("unchecked")
     public void start() throws InitializationFailedException {

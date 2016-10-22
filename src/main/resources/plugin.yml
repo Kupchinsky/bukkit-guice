@@ -1,4 +1,4 @@
 name: BukkitGuice
-main: com.evilmidget38.bukkitguice.GuicePlugin
+main: com.evilmidget38.bukkitguice.EmptyPlugin
 version: 1.0-SNAPSHOT
 author: evilmidget38
