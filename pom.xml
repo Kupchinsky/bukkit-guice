@@ -8,13 +8,6 @@
     <artifactId>bukkit-guice</artifactId>
     <version>1.0.4</version>
 
-    <repositories>
-        <repository>
-            <id>atisot_maven</id>
-            <url>file://${project.basedir}/../Maven</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
             <groupId>com.google.inject</groupId>
@@ -33,9 +26,9 @@
 			<scope>provided</scope>
         </dependency>
 		<dependency>
-			<groupId>ru.atisot</groupId>
-			<artifactId>kcauldron-srg</artifactId>
-			<version>1.7.10-custom-3</version>
+			<groupId>ru.atisot.mods</groupId>
+			<artifactId>kcauldron</artifactId>
+			<version>1.7.10-srg</version>
 			<scope>provided</scope>
 		</dependency>
         <dependency>
