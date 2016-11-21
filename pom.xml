@@ -92,6 +92,14 @@
 						<argument>target\bukkit-guice-${project.version}.jar</argument>
 					</arguments>
 				</configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
 			</plugin>
         </plugins>
     </build>
